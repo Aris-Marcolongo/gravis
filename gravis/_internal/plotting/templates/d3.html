@@ -1100,7 +1100,7 @@
             state.yPositioningForceStrength = §Y_POSITIONING_FORCE_STRENGTH§;
             state.useCenteringForce = §USE_CENTERING_FORCE§;
             // Other
-            state.initZoomFactor = §ZOOM_FACTOR§;
+            // state.initZoomFactor = §ZOOM_FACTOR§;
             state.largeGraphThreshold = §LARGE_GRAPH_THRESHOLD§;
           },
 
@@ -2540,7 +2540,7 @@
                 .on("zoom", zoomed);
               state.currentGraphParts.zoom = zoom;
               const xShift = parseInt(ui.elements.graphContainer.clientWidth) / 2.0,
-                yShift = parseInt(ui.elements.graphContainer.clientHeight) / 2.0;
+                yShift = parseInt(ui.elements.graphContainer.clientHeight) / state.yShift;
               svg
                 .call(zoom)
                 .call(zoom.transform, d3.zoomIdentity.translate(xShift, yShift).scale(state.initZoomFactor))
@@ -3753,11 +3753,13 @@
           ui.elements.fullscreenButton.onclick = function(){
             if(document.fullscreenElement){
               document.exitFullscreen();
+              app.restart(§Y_SHIFT_SMALL§, §ZOOM_FACTOR_SMALL§);
             } else{
               ui.elements.mainContainer.requestFullscreen()
                 .catch(function(err){
                   alert("Error attempting to enable full-screen mode: " + err.message);
                 });
+              app.restart(§Y_SHIFT_BIG§, §ZOOM_FACTOR_BIG§);
             }
           };
           ui.elements.mainContainer.onfullscreenchange = function(){
@@ -4188,13 +4190,28 @@
           })
         },
 
-        restart(){
-          ui.composites.graph.simulationManager.stop();
-          app.start();
-        },
+//        restart(){
+//          ui.composites.graph.simulationManager.stop();
+//          app.start();
+//        },
+
+          restart(new_shift = null, new_initZoomFactor = null){
+            ui.composites.graph.simulationManager.stop();
+            if (new_shift !== null) {
+              state.yShift = new_shift
+            }
+            if (new_initZoomFactor !== null) {
+              state.initZoomFactor = new_initZoomFactor
+            }
+            app.start();
+          },
+
+
       }
 
       // Start website dynamics
+      state.yShift = §Y_SHIFT_SMALL§
+      state.initZoomFactor = §ZOOM_FACTOR_SMALL§;
       app.start();
     });
   </script>
