@@ -34,7 +34,9 @@ def d3(data,
        collision_force_strength=0.7,
        use_x_positioning_force=False, x_positioning_force_strength=0.2,
        use_y_positioning_force=False, y_positioning_force_strength=0.2,
-       use_centering_force=True):
+       use_centering_force=True,
+       zoom_factor_small=None, zoom_factor_big=None,
+       y_shift_small=4.0, y_shift_big=4.0):
     """Create an interactive graph visualization with HTML/CSS/JS based on d3.v7.js.
 
     Parameters
@@ -211,6 +213,12 @@ def d3(data,
     - https://github.com/d3/d3-force
 
     """
+
+    if zoom_factor_small is None:
+       zoom_factor_small = zoom_factor
+    if zoom_factor_big is None:
+       zoom_factor_big = zoom_factor 
+
     # Argument processing
     _ca(graph_height, 'graph_height', (int, float))
     _ca(details_height, 'details_height', (int, float))
@@ -270,6 +278,10 @@ def d3(data,
     _ca(use_y_positioning_force, 'use_y_positioning_force', bool)
     _ca(y_positioning_force_strength, 'y_positioning_force_strength', (int, float))
     _ca(use_centering_force, 'use_centering_force', bool)
+    _ca(zoom_factor_small, 'zoom_factor_small', (int,float))
+    _ca(zoom_factor_big, 'zoom_factor_big', (int,float))
+    _ca(y_shift_small, 'y_shift_small', (int,float))
+    _ca(y_shift_big, 'y_shift_big', (int,float))
     data = _internal.normalize_graph_data(data)
 
     # Transformation
@@ -345,7 +357,13 @@ def d3(data,
         'USE_Y_POSITIONING_FORCE': _ts.to_json(use_y_positioning_force),
         'Y_POSITIONING_FORCE_STRENGTH': _ts.to_json(y_positioning_force_strength),
         'USE_CENTERING_FORCE': _ts.to_json(use_centering_force),
+        'ZOOM_FACTOR_SMALL': _ts.to_json(zoom_factor_small),
+        'ZOOM_FACTOR_BIG': _ts.to_json(zoom_factor_big),
+        'Y_SHIFT_SMALL': _ts.to_json(y_shift_small),
+        'Y_SHIFT_BIG': _ts.to_json(y_shift_big),
+
     }
     html = _ts.insert(site_template, insert_data)
+  
     fig = _ds.Figure(html)
     return fig
