@@ -3748,7 +3748,11 @@
             ui.composites.menu.toggleItem(ui.elements.generalHead, ui.elements.generalBody);
           };
           ui.elements.resetButton.onclick = function(){
-            app.restart();
+            if(document.fullscreenElement){
+               app.restart(§Y_SHIFT_BIG§, §ZOOM_FACTOR_BIG§);
+	    } else {
+               app.restart(§Y_SHIFT_SMALL§, §ZOOM_FACTOR_SMALL§);
+            }
           };
           ui.elements.fullscreenButton.onclick = function(){
             if(document.fullscreenElement){
